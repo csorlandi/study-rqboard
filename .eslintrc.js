@@ -43,7 +43,8 @@ module.exports = {
       },
     ],
     'react/require-default-props': 'off',
-    'no-promise-executor-return': 'off'
+    'no-promise-executor-return': 'off',
+    'no-nested-ternary': 'off'
   },
   settings: {
     'import/resolver': {

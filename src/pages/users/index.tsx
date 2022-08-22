@@ -5,6 +5,7 @@ import {
   Flex,
   Heading,
   Icon,
+  Spinner,
   Table,
   Tbody,
   Td,
@@ -16,22 +17,24 @@ import {
 } from '@chakra-ui/react';
 import { RiAddLine, RiPencilLine } from 'react-icons/ri';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+
 import { Pagination } from '../../components/Pagination';
 import { Header } from '../../components/Header';
 import { Sidebar } from '../../components/Sidebar';
 
 export default function UserList() {
+  const { data, isLoading, error } = useQuery(['users'], async () => {
+    const response = await fetch('http://localhost:3000/api/users');
+    const responseJson = await response.json();
+
+    return responseJson;
+  });
+
   const isWideVersion = useBreakpointValue({
     base: false,
     lg: true,
   });
-
-  useEffect(() => {
-    fetch('http://localhost:3000/api/users')
-      .then(response => response.json())
-      .then(response => console.log(response));
-  }, []);
 
   return (
     <Box>
@@ -59,103 +62,115 @@ export default function UserList() {
             </Link>
           </Flex>
 
-          <Table colorScheme="whiteAlpha">
-            <Thead>
-              <Tr>
-                <Th px={['4', '4', '6']} color="gray.300" width="8">
-                  <Checkbox colorScheme="pink" />
-                </Th>
-                <Th>Usuário</Th>
-                {isWideVersion && <Th>Data de cadastro</Th>}
-                <Th width="8" />
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr>
-                <Td px={['4', '4', '6']}>
-                  <Checkbox colorScheme="pink" />
-                </Td>
-                <Td>
-                  <Box>
-                    <Text fontWeight="bold">Claudio Orlandi</Text>
-                    <Text fontSize="small" color="gray.300">
-                      claudiosorlandi@gmail.com
-                    </Text>
-                  </Box>
-                </Td>
-                {isWideVersion && <Td>03 de Agosto, 2022</Td>}
-                <Td>
-                  {isWideVersion && (
-                    <Button
-                      as="a"
-                      size="sm"
-                      fontSize="small"
-                      colorScheme="purple"
-                      leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-                    >
-                      Editar
-                    </Button>
-                  )}
-                </Td>
-              </Tr>
-              <Tr>
-                <Td px={['4', '4', '6']}>
-                  <Checkbox colorScheme="pink" />
-                </Td>
-                <Td>
-                  <Box>
-                    <Text fontWeight="bold">Claudio Orlandi</Text>
-                    <Text fontSize="small" color="gray.300">
-                      claudiosorlandi@gmail.com
-                    </Text>
-                  </Box>
-                </Td>
-                {isWideVersion && <Td>03 de Agosto, 2022</Td>}
-                <Td>
-                  {isWideVersion && (
-                    <Button
-                      as="a"
-                      size="sm"
-                      fontSize="small"
-                      colorScheme="purple"
-                      leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-                    >
-                      Editar
-                    </Button>
-                  )}
-                </Td>
-              </Tr>
-              <Tr>
-                <Td px={['4', '4', '6']}>
-                  <Checkbox colorScheme="pink" />
-                </Td>
-                <Td>
-                  <Box>
-                    <Text fontWeight="bold">Claudio Orlandi</Text>
-                    <Text fontSize="small" color="gray.300">
-                      claudiosorlandi@gmail.com
-                    </Text>
-                  </Box>
-                </Td>
-                {isWideVersion && <Td>03 de Agosto, 2022</Td>}
-                <Td>
-                  {isWideVersion && (
-                    <Button
-                      as="a"
-                      size="sm"
-                      fontSize="small"
-                      colorScheme="purple"
-                      leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-                    >
-                      Editar
-                    </Button>
-                  )}
-                </Td>
-              </Tr>
-            </Tbody>
-          </Table>
+          {isLoading ? (
+            <Flex justify="center">
+              <Spinner />
+            </Flex>
+          ) : error ? (
+            <Flex justify="center">
+              <Text>Falha ao obter os dados do usuário</Text>
+            </Flex>
+          ) : (
+            <>
+              <Table colorScheme="whiteAlpha">
+                <Thead>
+                  <Tr>
+                    <Th px={['4', '4', '6']} color="gray.300" width="8">
+                      <Checkbox colorScheme="pink" />
+                    </Th>
+                    <Th>Usuário</Th>
+                    {isWideVersion && <Th>Data de cadastro</Th>}
+                    <Th width="8" />
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  <Tr>
+                    <Td px={['4', '4', '6']}>
+                      <Checkbox colorScheme="pink" />
+                    </Td>
+                    <Td>
+                      <Box>
+                        <Text fontWeight="bold">Claudio Orlandi</Text>
+                        <Text fontSize="small" color="gray.300">
+                          claudiosorlandi@gmail.com
+                        </Text>
+                      </Box>
+                    </Td>
+                    {isWideVersion && <Td>03 de Agosto, 2022</Td>}
+                    <Td>
+                      {isWideVersion && (
+                        <Button
+                          as="a"
+                          size="sm"
+                          fontSize="small"
+                          colorScheme="purple"
+                          leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
+                        >
+                          Editar
+                        </Button>
+                      )}
+                    </Td>
+                  </Tr>
+                  <Tr>
+                    <Td px={['4', '4', '6']}>
+                      <Checkbox colorScheme="pink" />
+                    </Td>
+                    <Td>
+                      <Box>
+                        <Text fontWeight="bold">Claudio Orlandi</Text>
+                        <Text fontSize="small" color="gray.300">
+                          claudiosorlandi@gmail.com
+                        </Text>
+                      </Box>
+                    </Td>
+                    {isWideVersion && <Td>03 de Agosto, 2022</Td>}
+                    <Td>
+                      {isWideVersion && (
+                        <Button
+                          as="a"
+                          size="sm"
+                          fontSize="small"
+                          colorScheme="purple"
+                          leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
+                        >
+                          Editar
+                        </Button>
+                      )}
+                    </Td>
+                  </Tr>
+                  <Tr>
+                    <Td px={['4', '4', '6']}>
+                      <Checkbox colorScheme="pink" />
+                    </Td>
+                    <Td>
+                      <Box>
+                        <Text fontWeight="bold">Claudio Orlandi</Text>
+                        <Text fontSize="small" color="gray.300">
+                          claudiosorlandi@gmail.com
+                        </Text>
+                      </Box>
+                    </Td>
+                    {isWideVersion && <Td>03 de Agosto, 2022</Td>}
+                    <Td>
+                      {isWideVersion && (
+                        <Button
+                          as="a"
+                          size="sm"
+                          fontSize="small"
+                          colorScheme="purple"
+                          leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
+                        >
+                          Editar
+                        </Button>
+                      )}
+                    </Td>
+                  </Tr>
+                </Tbody>
+              </Table>
 
-          <Pagination />
+              <Pagination />
+            </>
+          )}
         </Box>
       </Flex>
     </Box>
