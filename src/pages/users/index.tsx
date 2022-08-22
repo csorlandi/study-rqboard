@@ -17,45 +17,14 @@ import {
 } from '@chakra-ui/react';
 import { RiAddLine, RiPencilLine } from 'react-icons/ri';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
 
 import { Pagination } from '../../components/Pagination';
 import { Header } from '../../components/Header';
 import { Sidebar } from '../../components/Sidebar';
-import { api } from '../../services/api';
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  createdAt: string;
-};
+import { useUsers } from '../../hooks/useUsers';
 
 export default function UserList() {
-  const { data, isLoading, error, isFetching } = useQuery<User[]>(
-    ['users'],
-    async () => {
-      const { data: responseJson } = await api.get('users');
-
-      const users = responseJson.users.map((user: User) => {
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          createdAt: new Date(user.createdAt).toLocaleDateString('pt-BR', {
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric',
-          }),
-        };
-      });
-
-      return users;
-    },
-    {
-      staleTime: 1000 * 5, // 5 seconds
-    },
-  );
+  const { data, isLoading, error, isFetching } = useUsers();
 
   const isWideVersion = useBreakpointValue({
     base: false,
