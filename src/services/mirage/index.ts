@@ -37,7 +37,8 @@ export function makeServer() {
       this.timing = 750;
 
       this.get('/users', function (schema, request) {
-        const { page = 1, perPage = 10 } = request.params;
+        // @ts-ignore
+        const { page = 1, perPage = 10 } = request.queryParams;
 
         const total = schema.all('user').length;
         const pageStart = (Number(page) - 1) * Number(perPage);
