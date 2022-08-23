@@ -55,10 +55,14 @@ export function makeServer() {
         const pageEnd = pageStart + Number(perPage);
 
         // @ts-ignore
-        const users = this.serialize(schema.all('user')).users.slice(
-          pageStart,
-          pageEnd,
-        );
+        const users = this.serialize(schema.all('user'))
+          .users.sort((a: User, b: User) => {
+            return (
+              new Date(a.created_at).getTime() -
+              new Date(b.created_at).getTime()
+            );
+          })
+          .slice(pageStart, pageEnd);
 
         return new Response(
           200,
